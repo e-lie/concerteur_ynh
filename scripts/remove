@@ -12,10 +12,10 @@ source /usr/share/yunohost/helpers
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 
+sudo systemctl stop concerteur.service
+
 SECURE_REMOVE '/var/www/$app'
 #SECURE_REMOVE '/var/log/$app'
-
-sudo systemctl stop concerteur.service
 
 # If a MySQL database is used:
 # Drop MySQL database and user

@@ -34,13 +34,16 @@ sudo mkdir "$final_path"
 sudo chown -R www-data: $final_path
 ynh_app_setting_set $app final_path $final_path
 
-cp -R ../sources/* "$final_path"
+sudo cp -a ../sources/. "$final_path"
 
 sudo apt-get update
 sudo apt-get install -y python3-setuptools
 sudo apt-get install -y python3-pip
 
 virtualenv3 -p python3 "$final_path/venv"
+
+source "$final_path/.env"
+
 pip3 install -r "$final_path/requirements.txt"
 
 # Generate MySQL password and create database
@@ -53,7 +56,6 @@ ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
 sed -i "s@MYSQL_LOGIN@$dbuser:$dbpass@g" "$final_path/.env"
 sed -i "s@DB_NAME@$dbname@g" "$final_path/.env"
 
-source "$final_path/.env"
 
 #init db using flask migrate utility
 python3 "$final_path/manage.py" db init
