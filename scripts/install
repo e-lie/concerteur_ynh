@@ -63,7 +63,8 @@ sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
 sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
 
-sudo bash "$final_path/env" && pip3 install -r "$final_path/requirements.txt"
+bash "$final_path/env" 
+pip3 install -r "$final_path/requirements.txt"
 
 echo "---------------- requirements installed"
 
