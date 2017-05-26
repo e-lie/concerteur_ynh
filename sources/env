@@ -1,4 +1,3 @@
-#export DATABASE_URL="postgresql://concerteur:concerteur007@localhost/concerteur"
-export DATABASE_URL="mysql+pymysql://root:$(cat /etc/yunohost/mysql)@localhost/concerteur"
+export DATABASE_URL="mysql+pymysql://DB_LOGIN@localhost/DB_NAME"
 export APP_SETTINGS="config.StagingConfig"
-source ./venv/bin/activate
+source FINAL_PATH/venv/bin/activate

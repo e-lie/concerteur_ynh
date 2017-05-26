@@ -49,6 +49,8 @@ virtualenv -p python3 "$final_path/venv"
 
 echo "--------------- venv installed"
 
+sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
+sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
 source "$final_path/env"
 
 pip3 install -r "$final_path/requirements.txt"
@@ -64,8 +66,6 @@ ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
 
 echo "database created"
 
-sed -i "s@MYSQL_LOGIN@$dbuser:$dbpass@g" "$final_path/.env"
-sed -i "s@DB_NAME@$dbname@g" "$final_path/.env"
 
 #init db using flask migrate utility
 python3 "$final_path/manage.py" db init
