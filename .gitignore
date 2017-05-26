@@ -1,2 +1,10 @@
-*~
-*.sw[op]
+__pycache__
+sources/inbox
+sources/migrations
+sources/venv
+sources/question_archives
+*.pyc
+*.mp3
+*.old
+*.swp
+sources/.env
