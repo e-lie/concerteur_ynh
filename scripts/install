@@ -28,13 +28,15 @@ ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path
 ynh_app_setting_set $app admin $admin_concerteur
 
+echo "first settings done"
 
 # Create final_path and check
 sudo mkdir "$final_path"
+sudo cp -a ../sources/. "$final_path"
 sudo chown -R www-data: $final_path
 ynh_app_setting_set $app final_path $final_path
 
-sudo cp -a ../sources/. "$final_path"
+echo "sources copied"
 
 sudo apt-get update
 sudo apt-get install -y python3-setuptools
@@ -46,6 +48,8 @@ source "$final_path/.env"
 
 pip3 install -r "$final_path/requirements.txt"
 
+echo "requirements installed"
+
 # Generate MySQL password and create database
 dbuser=$app
 dbname=$app
@@ -53,15 +57,17 @@ dbpass=$(ynh_string_random 12)
 ynh_app_setting_set "$app" mysqlpwd "$dbpass"
 ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
 
+echo "database created"
+
 sed -i "s@MYSQL_LOGIN@$dbuser:$dbpass@g" "$final_path/.env"
 sed -i "s@DB_NAME@$dbname@g" "$final_path/.env"
-
 
 #init db using flask migrate utility
 python3 "$final_path/manage.py" db init
 python3 "$final_path/manage.py" db migrate
 python3 "$final_path/manage.py" db upgrade
 
+echo "database setup"
 
 nginx_conf=../conf/nginx.conf
 sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
@@ -73,4 +79,8 @@ sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
 
 sudo cp $systemd_service /etc/systemd/system/
 
+echo "confs installed"
+
 sudo systemctl start concerteur.service
+
+echo "service started"
