@@ -40,7 +40,7 @@ sudo apt-get update
 sudo apt-get install -y python3-setuptools
 sudo apt-get install -y python3-pip
 
-virtualenv3 -p python3 "$final_path/venv"
+virtualenv -p python3 "$final_path/venv"
 
 source "$final_path/.env"
 
