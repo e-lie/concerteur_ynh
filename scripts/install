@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Exit on command errors and treat unset variables as an error
+set -eu
+
+source .fonctions	# Charge les fonctions génériques habituellement utilisées dans le script
+
+TRAP_ON # Active trap pour arrêter le script si une erreur est détectée.
+
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+admin_concerteur=$YNH_APP_ARG_ADMIN_CONCERTEUR
+
+app=$YNH_APP_INSTANCE_NAME
+
+# Source app helpers
+source /usr/share/yunohost/helpers
+
+CHECK_VAR "$app" "app name not set"
+
+CHECK_USER "$admin_concerteur"
+
+CHECK_DOMAINPATH
+
+CHECK_FINALPATH
+
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path
+ynh_app_setting_set $app admin $admin_concerteur
+
+
+# Create final_path and check
+sudo mkdir "$final_path"
+sudo chown -R www-data: $final_path
+ynh_app_setting_set $app final_path $final_path
+
+cp -R ../sources/* "$final_path"
+
+sudo apt-get update
+sudo apt-get install -y python3-setuptools
+sudo apt-get install -y python3-pip
+
+virtualenv3 -p python3 "$final_path/venv"
+pip3 install -r "$final_path/requirements.txt"
+
+# Generate MySQL password and create database
+dbuser=$app
+dbname=$app
+dbpass=$(ynh_string_random 12)
+ynh_app_setting_set "$app" mysqlpwd "$dbpass"
+ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
+
+sed -i "s@MYSQL_LOGIN@$dbuser:$dbpass@g" "$final_path/.env"
+sed -i "s@DB_NAME@$dbname@g" "$final_path/.env"
+
+source "$final_path/.env"
+
+#init db using flask migrate utility
+python3 "$final_path/manage.py" db init
+python3 "$final_path/manage.py" db migrate
+python3 "$final_path/manage.py" db upgrade
+
+
+nginx_conf=../conf/nginx.conf
+sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
+
+sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+systemd_service=../conf/concerteur.service
+sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
+
+sudo cp $systemd_service /etc/systemd/system/
+
+sudo systemctl start concerteur.service
