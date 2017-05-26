@@ -49,6 +49,16 @@ virtualenv -p python3 "$final_path/venv"
 
 echo "--------------- venv installed"
 
+# Generate MySQL password and create database
+dbuser=$app
+dbname=$app
+dbpass=$(ynh_string_random 12)
+ynh_app_setting_set "$app" mysqlpwd "$dbpass"
+ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
+
+echo "--------------- database created"
+
+
 sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
 source "$final_path/env"
