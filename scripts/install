@@ -48,11 +48,11 @@ virtualenv -p python3 "$final_path/venv"
 
 echo "--------------- venv installed"
 
-source "$final_path/.env"
+source "$final_path/env"
 
 pip3 install -r "$final_path/requirements.txt"
 
-echo "requirements installed"
+echo "---------------- requirements installed"
 
 # Generate MySQL password and create database
 dbuser=$app
