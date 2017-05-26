@@ -37,7 +37,6 @@ sudo chown -R www-data: $final_path
 ynh_app_setting_set $app final_path $final_path
 
 echo "sources copied"
-ls "$final_path"
 
 #sudo apt-get update
 #sudo apt-get install -y python3-setuptools
@@ -63,9 +62,8 @@ sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
 sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
 
-source "$final_path/env" 
-which python
-pip3 install -r "$final_path/requirements.txt"
+pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
+ls "$final_path/venv"
 
 echo "---------------- requirements installed"
 
