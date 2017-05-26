@@ -61,6 +61,7 @@ echo "--------------- database created"
 
 sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
+sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
 source "$final_path/env"
 
 pip3 install -r "$final_path/requirements.txt"
