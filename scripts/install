@@ -42,7 +42,11 @@ sudo apt-get update
 sudo apt-get install -y python3-setuptools
 sudo apt-get install -y python3-pip
 
+sudo mkdir "$final_path/venv"
+sudo chmod -R 777 "$final_path/venv"
 virtualenv -p python3 "$final_path/venv"
+
+echo "--------------- venv installed"
 
 source "$final_path/.env"
 
