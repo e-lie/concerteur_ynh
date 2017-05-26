@@ -62,17 +62,15 @@ sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
 sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
 
-pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
+#pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
+sudo bash -c "source $final_path/venv/bin/activate && pip3 install -r $final_path/requirements.txt"
 
 echo "---------------- requirements installed"
 
 #init db using flask migrate utility
-source "$final_path/venv/bin/activate"
-which python3
-echo "-----****************---------"
-python3 "$final_path/manage.py" db init
-python3 "$final_path/manage.py" db migrate
-python3 "$final_path/manage.py" db upgrade
+sudo bash -c "source $final_path/venv/bin/activate && python3 "$final_path/manage.py" db init
+sudo bash -c "source $final_path/venv/bin/activate && python3 "$final_path/manage.py" db migrate
+sudo bash -c "source $final_path/venv/bin/activate && python3 "$final_path/manage.py" db upgrade
 
 echo "database setup"
 
