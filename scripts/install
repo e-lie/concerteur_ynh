@@ -74,6 +74,8 @@ sudo bash -c "source $final_path/env && python3 $final_path/manage.py db upgrade
 
 nginx_conf=../conf/nginx.conf
 sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
+sed -i "s@APP_URI@$path@g" $nginx_conf
+sed -i "s@APP_URI2@$path@g" $nginx_conf
 
 sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
 
