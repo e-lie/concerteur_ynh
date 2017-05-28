@@ -59,9 +59,9 @@ ynh_app_setting_set "$app" mysqlpwd "$dbpass"
 ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
 
 
-sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
-sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
-sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
+sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env_conf"
+sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env_conf"
+sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env_conf"
 
 #pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
 sudo bash -c "source $final_path/venv/bin/activate && pip3 install -r $final_path/requirements.txt"
