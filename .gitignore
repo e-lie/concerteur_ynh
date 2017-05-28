@@ -5,6 +5,7 @@ sources/venv
 sources/question_archives
 *.pyc
 *.mp3
+*.zip
 *.old
 *.swp
 sources/.env
