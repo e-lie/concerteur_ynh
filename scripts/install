@@ -9,15 +9,10 @@ TRAP_ON # Active trap pour arrêter le script si une erreur est détectée.
 
 
 
-#domain=$YNH_APP_ARG_DOMAIN
-#path=$YNH_APP_ARG_PATH
-#admin_concerteur=$YNH_APP_ARG_ADMIN_CONCERTEUR
-#app=$YNH_APP_INSTANCE_NAME
-
-domain="polyface.info"
-path="/concerteur"
-admin_concerteur="pharmapc"
-app="concerteur"
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+admin_concerteur=$YNH_APP_ARG_ADMIN_CONCERTEUR
+app=$YNH_APP_INSTANCE_NAME
 
 
 # Source app helpers
@@ -52,7 +47,7 @@ echo "sources copied"
 sudo mkdir "$final_path/venv"
 sudo chmod -R 777 "$final_path/venv"
 
-sudo virtualenv --system-site-packages -p python3 "$final_path/venv"
+sudo virtualenv -p python3 "$final_path/venv"
 
 echo "--------------- venv installed"
 
@@ -63,8 +58,6 @@ dbpass=$(ynh_string_random 12)
 ynh_app_setting_set "$app" mysqlpwd "$dbpass"
 ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
 
-echo "--------------- database created"
-
 
 sudo sed -i "s@DB_LOGIN@$dbuser:$dbpass@g" "$final_path/env"
 sudo sed -i "s@DB_NAME@$dbname@g" "$final_path/env"
@@ -73,14 +66,11 @@ sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env"
 #pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
 sudo bash -c "source $final_path/venv/bin/activate && pip3 install -r $final_path/requirements.txt"
 
-echo "---------------- requirements installed"
-
 #init db using flask migrate utility
 sudo bash -c "source $final_path/env && which python3 && python3 $final_path/manage.py db init"
 sudo bash -c "source $final_path/env && python3 $final_path/manage.py db migrate"
 sudo bash -c "source $final_path/env && python3 $final_path/manage.py db upgrade"
 
-echo "database setup"
 
 nginx_conf=../conf/nginx.conf
 sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
@@ -92,8 +82,7 @@ sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
 
 sudo cp $systemd_service /etc/systemd/system/
 
-echo "confs installed"
 
 sudo systemctl start concerteur.service
+sudo systemctl reload nginx
 
-echo "service started"
