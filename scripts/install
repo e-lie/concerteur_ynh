@@ -51,7 +51,8 @@ echo "sources copied"
 
 sudo mkdir "$final_path/venv"
 sudo chmod -R 777 "$final_path/venv"
-virtualenv -p python3 "$final_path/venv"
+
+sudo virtualenv --system-site-packacges -p python3 "$final_path/venv"
 
 echo "--------------- venv installed"
 
