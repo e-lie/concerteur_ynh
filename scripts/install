@@ -14,6 +14,18 @@ path=$YNH_APP_ARG_PATH
 admin_concerteur=$YNH_APP_ARG_ADMIN_CONCERTEUR
 app=$YNH_APP_INSTANCE_NAME
 
+# Path need a trailing slash, and location does not.
+# See conf/nginx.conf* usage
+location=$path
+if [[ ! $path == */ ]]; then
+    # no trailing slash, so add it
+    path=$path/
+fi
+if [[ ! "$location" == "/" ]]; then
+    # remove possible trailing slash
+    location=${location%/}
+fi
+
 
 # Source app helpers
 source /usr/share/yunohost/helpers
@@ -74,8 +86,8 @@ sudo bash -c "source $final_path/env_conf && python3 $final_path/manage.py db up
 
 nginx_conf=../conf/nginx.conf
 sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
-sed -i "s@APP_URI@$path@g" $nginx_conf
-sed -i "s@APP_URI_@$path@g" $nginx_conf
+sed -i "s@APP_PATH@$path@g" $nginx_conf
+sed -i "s@APP_LOCATION@$location@g" $nginx_conf
 
 sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
 
