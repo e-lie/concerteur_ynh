@@ -56,7 +56,7 @@ echo "sources copied"
 sudo apt-get update
 sudo apt-get install -y python3-setuptools
 sudo apt-get install -y python3-pip
-sudo apt-get install -y python3-virtualenv
+sudo apt-get install -y python-virtualenv
 
 sudo mkdir "$final_path/venv"
 sudo chmod -R 777 "$final_path/venv"
