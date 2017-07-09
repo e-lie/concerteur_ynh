@@ -16,7 +16,7 @@
 <div class="row">
 	<div class="well">
 		<h2>Question {{question.id}} - {{ question.title }}</h2>
-		<p><a href="{{ url_for('static', filename='zip/'+question.archive_name+'.zip') }}">Télécharger l'archive</a></p>
+		<p><a href="{{ ynh_route_prefix + url_for('static', filename='zip/'+question.archive_name+'.zip') }}">Télécharger l'archive</a></p>
 		<p>
 			{{question.text}}
 		</p>
@@ -30,9 +30,9 @@
 	<p>{{message.text }}</p>
 	<p>
 	{% if message.audio_path %}
-	<a href="{{ url_for('static', filename='mp3/'+message.audio_path) }}">audio</a>
+	<a href="{{ ynh_route_prefix + url_for('static', filename='mp3/'+message.audio_path) }}">audio</a>
 	{% endif %}
-       	- <a href="del-message/{{ message.id }}">poubelle !</a></p>
+       	- <a href="{{ ynh_route_prefix }}del-message/{{ message.id }}">poubelle !</a></p>
         </div>
 	</div>
     {% endfor %}
