@@ -44,7 +44,6 @@ ynh_app_setting_set $app admin $admin_concerteur
 
 echo "first settings done"
 
-sudo apt-get install -y python3-virtualenv
 
 # Create final_path and check
 sudo mkdir "$final_path"
@@ -54,9 +53,10 @@ ynh_app_setting_set $app final_path $final_path
 
 echo "sources copied"
 
-#sudo apt-get update
-#sudo apt-get install -y python3-setuptools
-#sudo apt-get install -y python3-pip
+sudo apt-get update
+sudo apt-get install -y python3-setuptools
+sudo apt-get install -y python3-pip
+sudo apt-get install -y python3-virtualenv
 
 sudo mkdir "$final_path/venv"
 sudo chmod -R 777 "$final_path/venv"
