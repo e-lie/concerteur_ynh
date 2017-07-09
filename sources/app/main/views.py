@@ -10,15 +10,14 @@ import parse
 import re
 import os
 
-prefix = "/concerteur"
 
-@main.route(prefix+'/')
+@main.route('/')
 def concerteur_home():
     print(main.template_folder)
     return render_template('home.html')
     #return "caca"
 
-@main.route(prefix+'/add-question', methods=['GET', 'POST'])
+@main.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     question = None
     form = AddQuestionForm()
@@ -51,19 +50,19 @@ def add_question():
     return render_template('add_question.html', form=form )
 
     
-@main.route(prefix+'/messages')
+@main.route('/messages')
 def messages():
     questions = db.session.query(Question).order_by(Question.time_created.desc()).all()
     return render_template('messages.html', questions=questions)
     
-@main.route(prefix+'/trash')
+@main.route('/trash')
 def trash():
     questions = db.session.query(Question).order_by(Question.time_created.desc()).all()
     return render_template('trash.html', questions=questions)
 
 
 #TODO add authentification for security
-@main.route(prefix+'/add-message', methods=['GET', 'POST'])
+@main.route('/add-message', methods=['GET', 'POST'])
 def add_sms():
 
     form = AddMessageForm()
@@ -136,7 +135,7 @@ def add_sms():
 
 
 
-@main.route(prefix+'/del-message/<message_num>', methods=['GET'])
+@main.route('/del-message/<message_num>', methods=['GET'])
 def del_message(message_num):
     message = db.session.query(Message).filter(Message.id == message_num).first()
     message.trashed = True
@@ -144,7 +143,7 @@ def del_message(message_num):
     db.session.commit()
     return 'Message {} mis à la poubelle. <br> <a href="/messages">retour</a>'.format(message_num)
 
-@main.route(prefix+'/get-sound-list', methods=['POST'])
+@main.route('/get-sound-list', methods=['POST'])
 def get_sound_list():
     
     filename = request.form['lastFilename']
@@ -191,7 +190,7 @@ def get_sound_list():
         print(jsonify(data))
     return jsonify(data)
 
-@main.route(prefix+'/get-sound', methods=['POST'])
+@main.route('/get-sound', methods=['POST'])
 def get_sound():
     filename = request.form['soundname']
     mp3Url = 'mp3' + '/' + filename
