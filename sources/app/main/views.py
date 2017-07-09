@@ -10,15 +10,15 @@ import parse
 import re
 import os
 
-ynh_route_prefix = current_app.config["YNH_ROUTE_PREFIX"]
+prefix = "YNH_ROUTE_PREFIX"
 
-@main.route(ynh_route_prefix + '/')
+@main.route(prefix+'/')
 def concerteur_home():
     print(main.template_folder)
-    return render_template('home.html', ynh_route_prefix=ynh_route_prefix)
+    return render_template('home.html')
     #return "caca"
 
-@main.route(ynh_route_prefix + '/add-question', methods=['GET', 'POST'])
+@main.route(prefix+'/add-question', methods=['GET', 'POST'])
 def add_question():
     question = None
     form = AddQuestionForm()
@@ -48,27 +48,27 @@ def add_question():
 
         db.session.commit()
 
-    return render_template('add_question.html', form=form, ynh_route_prefix=ynh_route_prefix )
+    return render_template('add_question.html', form=form )
 
     
-@main.route(ynh_route_prefix + '/messages')
+@main.route(prefix+'/messages')
 def messages():
     questions = db.session.query(Question).order_by(Question.time_created.desc()).all()
-    return render_template('messages.html', questions=questions, ynh_route_prefix=ynh_route_prefix)
+    return render_template('messages.html', questions=questions)
     
-@main.route(ynh_route_prefix + '/trash')
+@main.route(prefix+'/trash')
 def trash():
     questions = db.session.query(Question).order_by(Question.time_created.desc()).all()
-    return render_template('trash.html', questions=questions, ynh_route_prefix=ynh_route_prefix)
+    return render_template('trash.html', questions=questions)
 
 
 #TODO add authentification for security
-@main.route(ynh_route_prefix + '/add-message', methods=['GET', 'POST'])
+@main.route(prefix+'/add-message', methods=['GET', 'POST'])
 def add_sms():
 
     form = AddMessageForm()
     if request.method == 'GET':
-        return render_template('add_message.html', form=form, ynh_route_prefix=ynh_route_prefix)
+        return render_template('add_message.html', form=form)
 
     else:
         question = db.session.query(Question).filter(Question.current==True).first()
@@ -126,7 +126,7 @@ def add_sms():
             db.session.commit()
             
             #return "<h1>{}: {}</h1>".format(hashNum, request.form['text'])
-            return render_template('add_message.html', form=form, ynh_route_prefix=ynh_route_prefix)
+            return render_template('add_message.html', form=form)
 
         else:
             erreur = "Erreur : pas de question disponible pour ajouter des messages"
@@ -136,7 +136,7 @@ def add_sms():
 
 
 
-@main.route(ynh_route_prefix + '/del-message/<message_num>', methods=['GET'])
+@main.route(prefix+'/del-message/<message_num>', methods=['GET'])
 def del_message(message_num):
     message = db.session.query(Message).filter(Message.id == message_num).first()
     message.trashed = True
@@ -144,7 +144,7 @@ def del_message(message_num):
     db.session.commit()
     return 'Message {} mis à la poubelle. <br> <a href="/messages">retour</a>'.format(message_num)
 
-@main.route(ynh_route_prefix + '/get-sound-list', methods=['POST'])
+@main.route(prefix+'/get-sound-list', methods=['POST'])
 def get_sound_list():
     
     filename = request.form['lastFilename']
@@ -191,7 +191,7 @@ def get_sound_list():
         print(jsonify(data))
     return jsonify(data)
 
-@main.route(ynh_route_prefix + '/get-sound', methods=['POST'])
+@main.route(prefix+'/get-sound', methods=['POST'])
 def get_sound():
     filename = request.form['soundname']
     mp3Url = 'mp3' + '/' + filename

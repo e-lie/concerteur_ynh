@@ -6,7 +6,6 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET_KEY = 't_ifJk2jhR,jl$0'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    YNH_ROUTE_PREFIX = "LOCATION"
     QUESTION_ARCHIVE_DIR = 'question_archives'
     MP3_DIR = './app/main/static/mp3'
     ZIP_DIR = './app/main/static/zip'
