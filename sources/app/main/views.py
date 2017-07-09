@@ -10,12 +10,13 @@ import parse
 import re
 import os
 
-ynh_route_prefix = "LOCATION"
+ynh_route_prefix = current_app.config["YNH_ROUTE_PREFIX"]
 
 @main.route(ynh_route_prefix + '/')
 def concerteur_home():
     print(main.template_folder)
     return render_template('home.html', ynh_route_prefix=ynh_route_prefix)
+    #return "caca"
 
 @main.route(ynh_route_prefix + '/add-question', methods=['GET', 'POST'])
 def add_question():
