@@ -10,7 +10,7 @@ import parse
 import re
 import os
 
-prefix = "YNH_ROUTE_PREFIX"
+prefix = "/concerteur"
 
 @main.route(prefix+'/')
 def concerteur_home():
