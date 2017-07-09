@@ -44,7 +44,7 @@ ynh_app_setting_set $app admin $admin_concerteur
 
 echo "first settings done"
 
-sudo apt-get install -Y python3-virtualenv
+sudo apt-get install -y python3-virtualenv
 
 # Create final_path and check
 sudo mkdir "$final_path"
