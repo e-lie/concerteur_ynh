@@ -50,7 +50,7 @@ sudo mkdir "$final_path"
 sudo cp -r ../sources/. "$final_path"
 sudo chown -R www-data: $final_path
 ynh_app_setting_set $app final_path $final_path
-sudo sed -i "s@LOCATION@$location@g" "$final_path/config.py"
+sudo sed -i "s@LOCATION@$location@g" "$final_path/app/main/views.py"
 
 echo "sources copied"
 
