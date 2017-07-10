@@ -30,4 +30,4 @@ if [ -e "/etc/systemd/system/concercerteur.service" ]; then
 	sudo rm -fr '/etc/systemd/system/concercerteur.service'
 fi
 
-#REMOVE_NGINX_CONF # Suppression de la configuration nginx
+REMOVE_NGINX_CONF # Suppression de la configuration nginx
