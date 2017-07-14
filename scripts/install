@@ -85,13 +85,15 @@ sudo bash -c "source $final_path/env_conf && which python3 && python3 $final_pat
 sudo bash -c "source $final_path/env_conf && python3 $final_path/manage.py db migrate"
 sudo bash -c "source $final_path/env_conf && python3 $final_path/manage.py db upgrade"
 
-echo "------------ $location"
 nginx_conf=../conf/nginx.conf
 sed -i "s@FINAL_PATH@$final_path@g" $nginx_conf
 sed -i "s@APP_PATH@$path@g" $nginx_conf
 sed -i "s@APP_LOCATION@$location@g" $nginx_conf
 
 sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+uwsgi_conf="$final_path/concerteur.ini"
+sed -i "s@APP_LOCATION@$location@g" $uwsgi_conf
 
 systemd_service=../conf/concerteur.service
 sed -i "s@FINAL_PATH@$final_path@g" $systemd_service

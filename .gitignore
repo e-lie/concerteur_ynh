@@ -9,3 +9,4 @@ sources/question_archives
 *.old
 *.swp
 sources/.env
+.idea
