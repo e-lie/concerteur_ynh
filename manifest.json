@@ -52,20 +52,20 @@
                 "example": "johndoe"
             },
             {
+              "name": "imap_domain",
+              "ask": {
+                "en": "The domain of the IMAP (mailbox) account/server",
+                "fr": "Le nom de domaine du compte/serveur IMAP (boîte mail)"
+              },
+              "example": "mymailserver.tld"
+            },
+            {
                 "name": "imap_username",
                 "ask": {
                     "en": "The username to connect to the IMAP (mailbox) account",
                     "fr": "Le nom d'utilisateur pour se connecter au compte IMAP (boîte mail)"
                 },
                 "example": "concerteur (user of this server)"
-            },
-            {
-                "name": "imap_domain",
-                "ask": {
-                    "en": "The domain of the IMAP (mailbox) account",
-                    "fr": "Le nom de domaine du compte IMAP (boîte mail)"
-                },
-                "example": "mymailserver.tld"
             },
             {
                 "name": "imap_password",
