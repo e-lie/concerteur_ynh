@@ -13,11 +13,8 @@ class Config(object):
     
     CREDENTIALS = [
                 {'loginUser':'EVAL_5349668',
-                'loginPassword':'94wbhtnb'},
-                {'loginUser':'EVAL_7269307',
-                'loginPassword':'8vewq35k'},
-                {'loginUser':'EVAL_7824973',
-                'loginPassword':'dbhukc6j'}
+                'loginPassword':'94wbhtnb'}
+                #possibilité de mettre plusieurs comptes ici
                 ]
     CREDENTIAL_NUM = 0
 
