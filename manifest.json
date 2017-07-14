@@ -68,7 +68,7 @@
                 "example": "mymailserver.tld"
             },
             {
-                "name": "imap_passwd",
+                "name": "imap_password",
                 "type": "password",
                 "ask": {
                     "en": "The password for the IMAP (mailbox) account to use",
