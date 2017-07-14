@@ -99,10 +99,10 @@ sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
 sudo cp $systemd_service /etc/systemd/system/
 
 check_mail_script="$final_path/checkmails.py"
-sed -i "s@IMAP_USERNAME@$imap_username@g" $uwsgi_conf
-sed -i "s@IMAP_DOMAIN@$imap_domain@g" $uwsgi_conf
-sed -i "s@IMAP_PASSWORD@$imap_password@g" $uwsgi_conf
-sed -i "s@CONCERTEUR_SERVER@$location@g" $uwsgi_conf
+sed -i "s@IMAP_USERNAME@$imap_username@g" $check_mail_script
+sed -i "s@IMAP_DOMAIN@$imap_domain@g" $check_mail_script
+sed -i "s@IMAP_PASSWORD@$imap_password@g" $check_mail_script
+sed -i "s@CONCERTEUR_SERVER@$location@g" $check_mail_script
 
 
 croncmd="/usr/bin/python $final_path/checkmails.py &> /var/log/checkmails.log"
