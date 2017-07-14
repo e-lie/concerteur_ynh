@@ -12,10 +12,10 @@
     </div>
     <div class="navbar-collapse collapse">
        <ul class="nav navbar-nav">
-          <li><a href="/add-question">Ajouter une question</a></li>
-          <li><a href="/add-message">Ajouter un message</a></li>
-          <li><a href="/messages">Messages</a></li>
-          <li><a href="/trash">La poubelle</a></li>
+          <li><a href="{{ url_for('.add_question') }}">Ajouter une question</a></li>
+          <li><a href="{{ url_for('.add_sms') }}">Ajouter un message</a></li>
+          <li><a href="{{ url_for('.messages') }}">Messages</a></li>
+          <li><a href="{{ url_for('.trash') }}">La poubelle</a></li>
        </ul>
     </div>
   </div>

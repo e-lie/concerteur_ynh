@@ -32,7 +32,7 @@
 	{% if message.audio_path %}
 	<a href="{{ url_for('static', filename='mp3/'+message.audio_path) }}">audio</a>
 	{% endif %}
-       	- <a href="del-message/{{ message.id }}">poubelle !</a></p>
+       	- <a href="{{ url_for('.del_message') + message.id }}">poubelle !</a></p>
         </div>
 	</div>
     {% endfor %}

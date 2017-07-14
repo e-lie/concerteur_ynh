@@ -42,28 +42,20 @@ ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path
 ynh_app_setting_set $app admin $admin_concerteur
 
-echo "first settings done"
-
-
 # Create final_path and check
 sudo mkdir "$final_path"
 sudo cp -r ../sources/. "$final_path"
 sudo chown -R www-data: $final_path
 ynh_app_setting_set $app final_path $final_path
 
-echo "sources copied"
-
 sudo apt-get update
-sudo apt-get install -y python3-setuptools
-sudo apt-get install -y python3-pip
-sudo apt-get install -y python-virtualenv
+sudo apt-get install -y python3-setuptools python3-pip python-virtualenv
+sudo apt-get install python
 
 sudo mkdir "$final_path/venv"
 sudo chmod -R 777 "$final_path/venv"
 
 sudo virtualenv -p python3 "$final_path/venv"
-
-echo "--------------- venv installed"
 
 # Generate MySQL password and create database
 dbuser=$app
