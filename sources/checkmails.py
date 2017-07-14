@@ -8,7 +8,7 @@ import quopri
 IMAP_USER = 'concerteur'
 IMAP_PWD = 'concerteur007'
 CONCERTEUR_SERVER = 'https://concerteur-server.fr'
-IMAP_SERVER = CONCERTEUR_SERVER
+IMAP_SERVER = 'pharmakonpc.fr'
 
 conn = imaplib.IMAP4_SSL(IMAP_SERVER)
 

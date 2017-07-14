@@ -13,9 +13,9 @@ import os
 
 @main.route('/')
 def concerteur_home():
-    print(main.template_folder)
+    #print(main.template_folder)
+    #print(main.static_folder)
     return render_template('home.html')
-    #return "caca"
 
 @main.route('/add-question', methods=['GET', 'POST'])
 def add_question():
@@ -118,7 +118,6 @@ def add_sms():
 
             archive_dirpath = '{}/{}'.format(current_app.config['QUESTION_ARCHIVE_DIR'], question.archive_name)
             zippath = current_app.config['ZIP_DIR']+'/'+question.archive_name
-            print(zippath, archive_dirpath)
             shutil.make_archive(zippath,'zip',archive_dirpath)
 
             db.session.add(message)
@@ -156,11 +155,11 @@ def get_sound_list():
     if int(message_id) < 0:
         message_id = 1
 
-    print(message_id)
+    print("get_sound_list -> message_id : " + str(message_id))
 
     max_id = int(db.session.query(Message.id).order_by(Message.id.desc()).first()[0])
 
-    print(max_id)
+    print("get_sound_list -> max_id : " + str(max_id))
     if int(message_id) > max_id:
         message_id = 1
         filename = "{}_mfoaiezjfamozife_moiefamoiezjf".format(max_id)

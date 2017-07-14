@@ -100,7 +100,7 @@ cronjob="* * * * * $croncmd"
 # (1- lister le contenu du cron
 # 2- enlever la ligne contenant la commande si existe déjà,
 # 3- ajouter le cronjob, 4- passer ce contenu à la crontab)
-( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+( sudo crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | sudo crontab -
 
 # command to remove the cronjob ( crontab -l | grep -v -F "$croncmd" ) | crontab -
 
