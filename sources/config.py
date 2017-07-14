@@ -14,7 +14,6 @@ class Config(object):
     CREDENTIALS = [
                 {'loginUser':'EVAL_5349668',
                 'loginPassword':'94wbhtnb'}
-                #possibilité de mettre plusieurs comptes ici
                 ]
     CREDENTIAL_NUM = 0
 

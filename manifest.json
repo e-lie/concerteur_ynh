@@ -50,7 +50,33 @@
                     "fr": "Administrateur du Concerteur (doit être un utilisateur YunoHost existant)"
                 },
                 "example": "johndoe"
+            },
+            {
+                "name": "imap_username",
+                "ask": {
+                    "en": "The username to connect to the IMAP (mailbox) account",
+                    "fr": "Le nom d'utilisateur pour se connecter au compte IMAP (boîte mail)"
+                },
+                "example": "concerteur (user of this server)"
+            },
+            {
+                "name": "imap_domain",
+                "ask": {
+                    "en": "The domain of the IMAP (mailbox) account",
+                    "fr": "Le nom de domaine du compte IMAP (boîte mail)"
+                },
+                "example": "mymailserver.tld"
+            },
+            {
+                "name": "imap_passwd",
+                "type": "password",
+                "ask": {
+                    "en": "The password for the IMAP (mailbox) account to use",
+                    "fr": "Le mot de passe du compte IMAP (boîte mail) à utiliser"
+                },
+                "example": "YTie_ça8diu (the password set for the concerteur account on this server)"
             }
+
         ]
     }
 }

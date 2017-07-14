@@ -5,12 +5,12 @@ from urllib2 import urlopen
 import sys
 import quopri
 
-IMAP_USER = 'concerteur'
-IMAP_PWD = 'concerteur007'
-CONCERTEUR_SERVER = 'https://concerteur-server.fr'
-IMAP_SERVER = 'pharmakonpc.fr'
+IMAP_USER = 'IMAP_USERNAME'
+IMAP_PWD = 'IMAP_PASSWORD'
+IMAP_SRV = 'IMAP_DOMAIN'
+CONCERTEUR_SRV = 'CONCERTEUR_SERVER'
 
-conn = imaplib.IMAP4_SSL(IMAP_SERVER)
+conn = imaplib.IMAP4_SSL(IMAP_SRV)
 
 try:
     (retcode, capabilities) = conn.login(IMAP_USER, IMAP_PWD)
@@ -55,7 +55,7 @@ if retcode == 'OK':
     
         print(params)
         #Local POST request to the flask app using a custom port
-        url = CONCERTEUR_SERVER+'/add-message'
+        url = CONCERTEUR_SRV+'/add-message'
 
         # Encode the query string
         querystring = urlencode(params)

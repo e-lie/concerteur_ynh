@@ -13,6 +13,9 @@ domain=$YNH_APP_ARG_DOMAIN
 path=$YNH_APP_ARG_PATH
 admin_concerteur=$YNH_APP_ARG_ADMIN_CONCERTEUR
 app=$YNH_APP_INSTANCE_NAME
+imap_username=$YNH_APP_ARG_IMAP_USERNAME
+imap_domain=$YNH_APP_ARG_IMAP_DOMAIN
+imap_password=$YNH_APP_ARG_IMAP_PASSWORD
 
 # Path need a trailing slash, and location does not.
 # See conf/nginx.conf* usage
@@ -41,6 +44,8 @@ CHECK_FINALPATH
 ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path
 ynh_app_setting_set $app admin $admin_concerteur
+
+
 
 # Create final_path and check
 sudo mkdir "$final_path"
@@ -92,6 +97,13 @@ systemd_service=../conf/concerteur.service
 sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
 
 sudo cp $systemd_service /etc/systemd/system/
+
+check_mail_script="$final_path/checkmails.py"
+sed -i "s@IMAP_USERNAME@$imap_username@g" $uwsgi_conf
+sed -i "s@IMAP_DOMAIN@$imap_domain@g" $uwsgi_conf
+sed -i "s@IMAP_PASSWORD@$imap_password@g" $uwsgi_conf
+sed -i "s@CONCERTEUR_SERVER@$location@g" $uwsgi_conf
+
 
 croncmd="/usr/bin/python $final_path/checkmails.py &> /var/log/checkmails.log"
 cronjob="* * * * * $croncmd"
