@@ -93,6 +93,17 @@ sed -i "s@FINAL_PATH@$final_path@g" $systemd_service
 
 sudo cp $systemd_service /etc/systemd/system/
 
+croncmd="/usr/bin/python $final_path/checkmails.py &> /var/log/checkmails.log"
+cronjob="* * * * * $croncmd"
+
+# ajouter au cron root
+# (1- lister le contenu du cron
+# 2- enlever la ligne contenant la commande si existe déjà,
+# 3- ajouter le cronjob, 4- passer ce contenu à la crontab)
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+
+# command to remove the cronjob ( crontab -l | grep -v -F "$croncmd" ) | crontab -
+
 
 sudo systemctl start concerteur.service
 sudo systemctl reload nginx
