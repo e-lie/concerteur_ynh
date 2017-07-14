@@ -7,7 +7,8 @@ import quopri
 
 IMAP_USER = 'concerteur'
 IMAP_PWD = 'concerteur007'
-IMAP_SERVER = 'pharmakonpc.fr'
+CONCERTEUR_SERVER = 'https://concerteur-server.fr'
+IMAP_SERVER = CONCERTEUR_SERVER
 
 conn = imaplib.IMAP4_SSL(IMAP_SERVER)
 
@@ -54,7 +55,7 @@ if retcode == 'OK':
     
         print(params)
         #Local POST request to the flask app using a custom port
-        url = 'https://pharmakonpc.fr/add-message'
+        url = CONCERTEUR_SERVER+'/add-message'
 
         # Encode the query string
         querystring = urlencode(params)
