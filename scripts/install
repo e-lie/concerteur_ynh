@@ -102,7 +102,7 @@ check_mail_script="$final_path/checkmails.py"
 sed -i "s@IMAP_USERNAME@$imap_username@g" $check_mail_script
 sed -i "s@IMAP_DOMAIN@$imap_domain@g" $check_mail_script
 sed -i "s@IMAP_PASSWORD@$imap_password@g" $check_mail_script
-sed -i "s@CONCERTEUR_SERVER@$location@g" $check_mail_script
+sed -i "s@CONCERTEUR_SERVER@https://$domain$location@g" $check_mail_script
 
 
 croncmd="/usr/bin/python $final_path/checkmails.py &> /var/log/checkmails.log"
