@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 
-{% block title %}Concerteur - Ajouter un message{% endblock %}
+{% block title %}Concerteur - Ajouter un message manuellement{% endblock %}
 
 
 {% block navbar %}
@@ -14,7 +14,8 @@
 <div class="container">
 <div class="page-header">
 <h1>Concerteur</h1>
-<h2>Ajouter un Message</h2>
+<h2>Ajouter un Message manuellement</h2>
+<p>Les messages ajouté à la base de donnée du concerteur sont normalement envoyés par sms. Ce formulaire permet d'ajouter un message depuis l'interface web, c'est dire simuler l'envoi d'un SMS</p>
 {{ wtf.quick_form(form) }}
 
 </div>

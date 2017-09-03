@@ -12,16 +12,31 @@
 <div class="container">
 <div class="page-header">
 <h1>Messages</h1>
+<a href="{{ url_for('.activate_question') }}">activer le mode "jouer la question"</a>
+</br>
+<a href="{{ url_for('.deactivate_question') }}">désactiver le mode "jouer la question"</a>
+</br>
+<a href="{{ url_for('.set_refresh') }}">resynchroniser les clients</a>
 {% for question in questions %}
 <div class="row">
 	<div class="well">
 		<h2>Question {{question.id}} - {{ question.title }}</h2>
+		{% if question.archive_name %}
+		<a href="{{ url_for('static', filename='mp3/'+question.audio_path) }}">audio</a>
+		{% endif %}
+		{% if question.audio_path %}
 		<p><a href="{{ url_for('static', filename='zip/'+question.archive_name+'.zip') }}">Télécharger l'archive</a></p>
+		{% endif %}
+		{% if question.current %}
+		<p>Question active</p>
+		{% else %}
+		<p><a href="{{ url_for('.change_question', message_num=question.id ) }}">activer la question</a></p>
+		{% endif %}
 		<p>
 			{{question.text}}
 		</p>
 	</div>
-    {% for message in question.messages if message.trashed == False %}
+    {% for message in question.messages | reverse if message.trashed == False %}
 	<div class="col-md-6 panel panel-default">
         <div class="panel-heading">
               <h3 class="panel-title">Message numéro {{ message.id }}</h3>
@@ -32,7 +47,7 @@
 	{% if message.audio_path %}
 	<a href="{{ url_for('static', filename='mp3/'+message.audio_path) }}">audio</a>
 	{% endif %}
-       	- <a href="{{ url_for('.del_message', message_num=message.id) }}">poubelle !</a></p>
+       	- <a href="{{ url_for('.trash_message', message_num=message.id) }}">poubelle !</a></p>
         </div>
 	</div>
     {% endfor %}

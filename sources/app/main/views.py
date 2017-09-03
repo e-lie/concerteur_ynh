@@ -1,4 +1,5 @@
-from flask import current_app, render_template, request, url_for, jsonify
+from flask import current_app, render_template, request, url_for, jsonify, redirect
+from contextlib import closing
 from .. import db, bootstrap
 from ..models import Question, User, Message
 from .forms import AddQuestionForm, AddMessageForm
@@ -45,7 +46,28 @@ def add_question():
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
 
+        question.audio_path = re.sub('[^\w\-_\.]', '-', name) + '.mp3'
+
+        mp3_path = current_app.config['MP3_DIR'] + '/' + question.audio_path
+        mp3_archive_path = "{}/{}".format(dirpath, question.audio_path)
+        messages_archive_file = '{}/{}/{}'.format( current_app.config['QUESTION_ARCHIVE_DIR'], question.archive_name, current_app.config['MESSAGES_ARCHIVE_FILENAME'])
+
+        mp3_sound = get_acapela_sound(message=question.text, voice_id='Celine')
+        with open(mp3_path, 'wb+') as mp3:
+            mp3.write(mp3_sound)
+        with open(mp3_archive_path, 'wb+') as archive_mp3:
+            archive_mp3.write(mp3_sound)
+
+        with open(messages_archive_file, 'a') as messages_file:
+            messages_file.write('Question : {}\n\n{}\n\n{}\n------\n'.format(question.title, question.audio_path, question.text))
+
+        archive_dirpath = '{}/{}'.format(current_app.config['QUESTION_ARCHIVE_DIR'], question.archive_name)
+        messages_archive_file = '{}/{}'.format( archive_dirpath, current_app.config['MESSAGES_ARCHIVE_FILENAME'])
+        zippath = current_app.config['ZIP_DIR']+'/'+question.archive_name
+        shutil.make_archive(zippath,'zip',archive_dirpath)
+
         db.session.commit()
+        return redirect(url_for('.messages'))
 
     return render_template('add_question.html', form=form )
 
@@ -107,10 +129,10 @@ def add_sms():
             else:
                 current_app.config['CREDENTIAL_NUM'] = 0
 
-            mp3_sound = get_acapela_sound(message=message.text, loginUser=loginUser, loginPassword=loginPassword)
-            with open(mp3_path, 'wb') as mp3:
+            mp3_sound = get_acapela_sound(message=message.text, voice_id='Mathieu')
+            with open(mp3_path, 'wb+') as mp3:
                 mp3.write(mp3_sound)
-            with open(mp3_archive_path, 'wb') as archive_mp3:
+            with open(mp3_archive_path, 'wb+') as archive_mp3:
                 archive_mp3.write(mp3_sound)
 
             with open(messages_archive_file, 'a') as messages_file:
@@ -124,7 +146,7 @@ def add_sms():
             db.session.commit()
             
             #return "<h1>{}: {}</h1>".format(hashNum, request.form['text'])
-            return render_template('add_message.html', form=form)
+            return redirect(url_for('.messages'))
 
         else:
             erreur = "Erreur : pas de question disponible pour ajouter des messages"
@@ -132,62 +154,169 @@ def add_sms():
             return erreur
 
 
+@main.route('/change_question/<message_num>', methods=['GET'])
+def change_question(message_num):
+    new_question = db.session.query(Question).filter(Question.id == int(message_num)).first()
+    old_question = db.session.query(Question).filter(Question.current == True).first()
+    if new_question:
+        new_question.current = True
+        old_question.current = False
+        db.session.add(new_question)
+        db.session.add(old_question)
+        db.session.commit()
+
+    return redirect(url_for('.messages'))
+
+
+@main.route('/trash-message/<message_num>', methods=['GET'])
+def trash_message(message_num):
+    message = db.session.query(Message).filter(Message.id == message_num).first()
+    message.trashed = True
+    db.session.add(message)
+    db.session.commit()
+    #return 'Message {} mis à la poubelle. <br> <a href="{}">retour</a>'.format(message_num, url_for('.messages'))
+    return redirect(url_for('.messages'))
+
+
+
+@main.route('/untrash-message/<message_num>', methods=['GET'])
+def untrash_message(message_num):
+    message = db.session.query(Message).filter(Message.id == message_num).first()
+    message.trashed = False
+    db.session.add(message)
+    db.session.commit()
+    return redirect(url_for('.trash'))
+    
 
 
 @main.route('/del-message/<message_num>', methods=['GET'])
 def del_message(message_num):
     message = db.session.query(Message).filter(Message.id == message_num).first()
-    message.trashed = True
-    db.session.add(message)
+
+    db.session.delete(message)
     db.session.commit()
-    return 'Message {} mis à la poubelle. <br> <a href="/messages">retour</a>'.format(message_num)
+
+    if message.audio_path:
+        mp3_path = current_app.config['MP3_DIR'] + '/' +  message.audio_path
+        os.remove(mp3_path)
+
+    #return 'Message {} supprimé. <br> <a href="{}">retour</a>'.format(message_num, url_for('.trash'))
+    return redirect(url_for('.trash'))
+
+
+
+@main.route('/update-status', methods=['POST'])
+def update_status():
+    print(current_app.config['UPDATE_STATUS'])
+    signature = request.form['signature']
+    if (current_app.config['UPDATE_STATUS'] and
+            signature not in current_app.config['CLIENT_STACK']):
+        current_app.config['CLIENT_STACK'].append(signature)
+        if len(current_app.config['CLIENT_STACK']) >= current_app.config['CLIENT_NUMBER']:
+            current_app.config['UPDATE_STATUS'] = False
+            current_app.config['CLIENT_STACK'] = []
+        data = { 'update_status': True }
+    else:
+        data = { 'update_status': False }
+    return jsonify(data)
+
+
+
+@main.route('/set-refresh', methods=['GET'])
+def set_refresh():
+    current_app.config['UPDATE_STATUS'] = True
+    return redirect(url_for('.messages'))
+
+
+
+@main.route('/activate-question', methods=['GET'])
+def activate_question():
+    current_app.config['QUESTION_ACTIVE'] = 1
+    return redirect(url_for('.messages'))
+
+
+
+@main.route('/deactivate-question', methods=['GET'])
+def deactivate_question():
+    current_app.config['QUESTION_ACTIVE'] = 0
+    return redirect(url_for('.messages'))
+
+
 
 @main.route('/get-sound-list', methods=['POST'])
 def get_sound_list():
     
-    filename = request.form['lastFilename']
-    if filename:
-        message_id = int(parse.parse("{}_{}_{}",filename)[0])
+    refresh = request.form['refresh']
+    if refresh == "True":
+        refresh = True
     else:
-        message_id = 1
-
-
-    if int(message_id) < 0:
-        message_id = 1
-
-    print("get_sound_list -> message_id : " + str(message_id))
-
-    max_id = int(db.session.query(Message.id).order_by(Message.id.desc()).first()[0])
-
-    print("get_sound_list -> max_id : " + str(max_id))
-    if int(message_id) > max_id:
-        message_id = 1
-        filename = "{}_mfoaiezjfamozife_moiefamoiezjf".format(max_id)
-
-    question_elem = db.session.query(Message.question_id).filter(Message.id == message_id).first()
-    question_id = -1
-    if question_elem:
-        question_id = int(question_elem[0])
+        refresh = False
     current_question = db.session.query(Question).filter(Question.current==True).first()
+    message_ids = [int(message.id) for message in current_question.messages] 
 
-    print(current_question.id)
-    print(question_id)
-    if question_id < current_question.id:
-        new_question = True
+    lastfilename = request.form['lastFilename']
+    if lastfilename:
+        message_id = int(parse.parse("{}_{}_{}",lastfilename)[0])
+    else:
+        message_id = 1
+
+    if refresh or (message_id not in message_ids): 
         filename_list = [message.audio_path for message in current_question.messages]
+        if filename_list:
+            data = { 'filenames':filename_list, 'lastfilename':filename_list[-1], 'refresh': True,
+                     'question_active':current_app.config['QUESTION_ACTIVE'], 'question_filename':current_question.audio_path}
+        else:
+            data = { 'filenames':filename_list, 'lastfilename':lastfilename, 'refresh': True,
+                     'question_active':current_app.config['QUESTION_ACTIVE'], 'question_filename':current_question.audio_path}
     else:
-        new_question = False
-        filename_tuples = db.session.query(Message.audio_path).filter(Message.id > message_id).all()
-        filename_list = [tupl[0] for tupl in filename_tuples]
-        print(filename_list)
+        messages_ids_to_dl = [i for i in message_ids if i > message_id]
+        filenames_to_dl = [message.audio_path for message in current_question.messages if message.id in messages_ids_to_dl]
+        if filenames_to_dl:
+            data = { 'filenames':filenames_to_dl, 'lastfilename':filenames_to_dl[-1], 'refresh': False,
+                     'question_active':current_app.config['QUESTION_ACTIVE'], 'question_filename':''}
+        else:
+            data = { 'filenames':filenames_to_dl, 'lastfilename':lastfilename, 'refresh': False,
+                     'question_active':current_app.config['QUESTION_ACTIVE'], 'question_filename':''}
 
-    
-    if filename_list:
-        data = { 'new_question':new_question, 'filenames':filename_list, 'lastfilename':filename_list[-1]}
-    else:
-        data = { 'new_question':new_question, 'filenames':filename_list, 'lastfilename':filename}
-        print(jsonify(data))
     return jsonify(data)
+
+
+   # if int(message_id) < 0:
+   #     message_id = 1
+
+   # print("get_sound_list -> message_id : " + str(message_id))
+
+   # max_id = int(db.session.query(Message.id).order_by(Message.id.desc()).first()[0])
+
+   # print("get_sound_list -> max_id : " + str(max_id))
+   # if int(message_id) > max_id:
+   #     message_id = 1
+   #     filename = "{}_mfoaiezjfamozife_moiefamoiezjf".format(max_id)
+
+   # question_elem = db.session.query(Message.question_id).filter(Message.id == message_id).first()
+   # question_id = -1
+   # if question_elem:
+   #     question_id = int(question_elem[0])
+   # current_question = db.session.query(Question).filter(Question.current==True).first()
+
+   # print(current_question.id)
+   # print(question_id)
+   # if question_id < current_question.id:
+   #     new_question = True
+   #     filename_list = [message.audio_path for message in current_question.messages]
+   # else:
+   #     new_question = False
+   #     filename_tuples = db.session.query(Message.audio_path).filter(Message.id > message_id).all()
+   #     filename_list = [tupl[0] for tupl in filename_tuples]
+   #     print(filename_list)
+
+   # 
+   # if filename_list:
+   #     data = { 'new_question':new_question, 'filenames':filename_list, 'lastfilename':filename_list[-1]}
+   # else:
+   #     data = { 'new_question':new_question, 'filenames':filename_list, 'lastfilename':filename}
+   #     print(jsonify(data))
+   # return jsonify(data)
 
 @main.route('/get-sound', methods=['POST'])
 def get_sound():

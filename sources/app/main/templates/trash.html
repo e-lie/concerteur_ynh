@@ -20,14 +20,22 @@
 	{{question.text}}
 	</p>
 	</div>
-    {% for message in question.messages if message.trashed == True %}
+    {% for message in question.messages | reverse if message.trashed == True %}
 	<div class="col-md-6 panel panel-default">
         <div class="panel-heading">
               <h3 class="panel-title">Message numéro {{ message.id }}</h3>
             </div>
             <div class="panel-body">
 	<p>{{message.text }}</p>
-	<p><a href="{{ url_for('static', filename='mp3/'+message.audio_path) }}">audio</a> - <a href="{{ url_for('.del_message', message_num=message.id) }}">supprimer</a></p>
+	<p>
+	{% if message.audio_path %}
+	<a href="{{ url_for('static', filename='mp3/'+message.audio_path) }}">audio</a> 
+	{% endif %}
+	- <a href="{{ url_for('.untrash_message', message_num=message.id) }}">restaurer</a>
+	</p>
+	<p>
+	<a href="{{ url_for('.del_message', message_num=message.id) }}">supprimer</a>
+	</p>
         </div>
 	</div>
     {% endfor %}

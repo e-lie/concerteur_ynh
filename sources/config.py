@@ -10,6 +10,10 @@ class Config(object):
     MP3_DIR = './app/static/mp3'
     ZIP_DIR = './app/static/zip'
     MESSAGES_ARCHIVE_FILENAME = 'messages.txt'
+    UPDATE_STATUS = False
+    CLIENT_STACK = []
+    CLIENT_NUMBER = 1
+    QUESTION_ACTIVE = 1
     
     CREDENTIALS = [
                 {'loginUser':'EVAL_5349668',

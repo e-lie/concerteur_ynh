@@ -8,6 +8,6 @@ class AddQuestionForm(Form):
     submit = SubmitField('Submit')
 
 class AddMessageForm(Form):
-    num = StringField('numéro de téléphone associé au message (33634354637 pour un portable)', validators=[Required()])
+    num = StringField("numéro de téléphone de l'émetteur (33634354637 pour un portable)", validators=[Required()])
     text = TextAreaField('Texte du message', validators=[Required()])
     submit = SubmitField('Submit')

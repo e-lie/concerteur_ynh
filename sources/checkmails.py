@@ -5,10 +5,10 @@ from urllib2 import urlopen
 import sys
 import quopri
 
-IMAP_USER = 'IMAP_USERNAME'
-IMAP_PWD = 'IMAP_PASSWORD'
-IMAP_SRV = 'IMAP_DOMAIN'
-CONCERTEUR_SRV = 'CONCERTEUR_SERVER'
+IMAP_USER = 'concerteur'
+IMAP_PWD = 'concerteur007'
+IMAP_SRV = 'leconcerteur.fr'
+CONCERTEUR_SRV = 'https://leconcerteur.fr/concerteur'
 
 conn = imaplib.IMAP4_SSL(IMAP_SRV)
 
@@ -33,7 +33,7 @@ if retcode == 'OK':
             if isinstance(response_part, tuple):
                 msg = email.message_from_string(response_part[1])
                 subject = msg['subject']
-                num = int(parse("{} +{:d}{}",subject)[1])
+                num = int(parse("{}+{:d}{}",subject)[1])
                 params['num'] = num
 
         (retcode, data) = conn.fetch(message_id,'(UID BODY[TEXT])')

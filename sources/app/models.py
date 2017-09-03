@@ -12,6 +12,7 @@ class Question(db.Model):
     text = db.Column(db.Unicode(1000))
     current = db.Column(db.Boolean())
     archive_name = db.Column(db.Unicode(300))
+    audio_path = db.Column(db.String(500))
     trashed = db.Column(db.Boolean(), default=False)
 
     messages = db.relationship('Message', backref='question')
