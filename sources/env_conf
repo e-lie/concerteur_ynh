@@ -1,3 +1,3 @@
-export DATABASE_URL="mysql+pymysql://concerteur:cMG769bNjzl7@localhost/concerteur"
+export DATABASE_URL="mysql+pymysql://root:awb5UMLQto@localhost/concerteur"
 export APP_SETTINGS="config.Config"
 source /var/www/concerteur/venv/bin/activate
