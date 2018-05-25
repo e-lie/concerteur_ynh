@@ -77,6 +77,8 @@ sudo sed -i "s@FINAL_PATH@$final_path@g" "$final_path/env_conf"
 
 #pip3 install -r "$final_path/requirements.txt" -t "$final_path/venv"
 sudo bash -c "source $final_path/venv/bin/activate && pip3 install -r $final_path/requirements.txt"
+#install parse for the checkmail script
+pip2 install parse
 
 #init db using flask migrate utility
 sudo bash -c "source $final_path/env_conf && which python3 && python3 $final_path/manage.py db init"
